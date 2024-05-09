@@ -1,4 +1,4 @@
-#!/Users/han-ingyu/Desktop/bookspoiler/.venv/bin/python
+#!/Users/han-ingyu/Desktop/bookspoiler/bookspoiler/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
