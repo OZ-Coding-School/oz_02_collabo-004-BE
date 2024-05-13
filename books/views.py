@@ -8,7 +8,8 @@ from rest_framework import status
 from rest_framework.exceptions import (ValidationError, NotFound, APIException)
 from rest_framework.pagination import PageNumberPagination
 
-# 예외처리함수
+
+
 def custom_handle_exception(self, exc):
         if isinstance(exc, ValidationError):
             return Response({"detail": "Bad Request."}, status=status.HTTP_400_BAD_REQUEST)
@@ -38,5 +39,3 @@ class BookList(generics.ListAPIView):
     # permission_classes = [IsStaffOrReadOnly]
 
     handle_exception = custom_handle_exception
-
-
