@@ -13,24 +13,4 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
-'''
-    def update_exposure(self):
-        # Book 인스턴스에 속한 Review 개수 확인
-        review_count = self.review_set.count()
-        
-        if review_count == 3:
-            # Review 인스턴스가 3개인 경우 각각의 필드가 채워져 있는지 확인
-            reviews = self.review_set.all()
-            reviews_fields_filled = all(
-                [review.url and review.writer and review.title and review.content and review.content_type for review in reviews]
-            )
-            
-            if reviews_fields_filled:
-                # 모든 조건을 만족할 때 is_exposed를 True로 설정
-                self.is_exposed = True
-            else:
-                self.is_exposed = False
-        else:
-            self.is_exposed = False
 
-        self.save() '''
