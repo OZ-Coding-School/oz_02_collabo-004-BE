@@ -39,6 +39,7 @@ class BookList(generics.ListAPIView):
 
     handle_exception = custom_handle_exception
 
+
 # 개별 도서 리스트 관리 및 개별 도서 정보 수정하기
 class BookDetail(generics.RetrieveUpdateAPIView):
     queryset = Book.objects.all()
@@ -47,3 +48,16 @@ class BookDetail(generics.RetrieveUpdateAPIView):
 
     handle_exception = custom_handle_exception
 
+
+# 신규 도서 생성하기
+class BookCreate(generics.CreateAPIView):
+    serializer_class = BookSerializer
+    # permission_classes = [IsStaffOrReadOnly]  # 인증된 사용자만 접근 가능하도록 권한 설정
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+        # 새로운 도서가 생성될 때 유저의 권한을 확인
+        # serializer.save(user=self.request.user)  # 새로운 도서의 작성자로 현재 유저를 지정
+
+        handle_exception = custom_handle_exception

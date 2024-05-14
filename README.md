@@ -1,4 +1,5 @@
-# 4팀 - frontend
+# 4팀 - back
+
 
 ## 📖 프로젝트 소개
 
@@ -89,3 +90,6 @@
 ### Communication Rules
 > - Discord 활용 
 > - 정기 회의
+
+백엔드용 github repository입니다.
+
