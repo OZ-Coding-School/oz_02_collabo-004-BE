@@ -36,3 +36,18 @@ class ChallengeList(APIView): # 전체 챌린지 리스트 가져오기 (관리�
         challenges = ChallengeInfo.objects.all()
         serializer = ChallengeInfoSerializer(challenges, many = True) 
         return Response(serializer.data)
+    
+class UpdateChallenge(APIView):  # 챌린지 정보 업데이트 하기 (관리자만 가능)
+    #permission_classes=[IsStaff]
+
+    def post(self, request, challengeinfo_id): 
+        try:
+            challenge_info = ChallengeInfo.objects.get(pk=challengeinfo_id)
+        except ChallengeInfo.DoesNotExist:
+            return Response({"message": "Challenge not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = ChallengeInfoSerializer(instance=challenge_info, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
