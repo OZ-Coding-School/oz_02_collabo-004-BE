@@ -62,3 +62,22 @@ class  UserChallengeList(APIView): # 사용자가 신청한 챌린지 리스트 
             return Response(serializer.data)
         except ChallengeInfo.DoesNotExist:
             return Response({"error": "User challenges not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class UserChallengeDetail(APIView): # 신청한 챌린지 상세사항 보기(관리자, 결제유저만 가능) 
+    #permission_classes=[IsPaidUserOrStaff] 
+    def get(self, request, challengeinfo_id, user_id):
+        try:
+            challenge_info = ChallengeInfo.objects.get(pk=challengeinfo_id)
+        except ChallengeInfo.DoesNotExist:
+            return Response({"error": "Challenge not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # 챌린지 정보에 연결된 책 정보 가져오기
+        book_serializer = BookSerializer(challenge_info.book)
+
+        # 모든 정보를 조합하여 응답 데이터 구성
+        response_data = {
+            "challenge_info" : ChallengeInfoSerializer(challenge_info).data,
+            "book_info": book_serializer.data
+        }
+
+        return Response(response_data)
