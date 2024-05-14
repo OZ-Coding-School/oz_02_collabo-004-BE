@@ -36,3 +36,6 @@ class ChallengeFiveSpoilers(generics.ListAPIView):
         five_spoilers = Review.objects.filter(challenge_info_id=challenge_info_id)
 
         return five_spoilers
+
+    handle_exception = custom_handle_exception
+
