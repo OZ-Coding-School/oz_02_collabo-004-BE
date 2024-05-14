@@ -153,3 +153,18 @@ class ChallengeSpoilerComment(APIView): #챌린지 스포일러에 전체 댓글
         doit_comments = DoItComment.objects.filter(challengespoiler_info=challengespoiler)
         serializer = DoItCommentSerializer(doit_comments, many=True)
         return Response(serializer.data)
+    
+class UpdateDIComment(APIView): # 챌린지용 스포일러에 댓글 업데이트 하기 (관리자, 결제유저만 가능)
+    #permission_classes = [IsPaidUserOrStaff]
+
+    def put(self, request, doitcomment_id): 
+        try:
+            doit_comment = DoItComment.objects.get(pk=doitcomment_id)
+        except DoItComment.DoesNotExist:
+            return Response({"message": "DoItComment not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = DoItCommentSerializer(doit_comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
