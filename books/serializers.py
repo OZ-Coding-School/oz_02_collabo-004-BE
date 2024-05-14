@@ -10,7 +10,7 @@ class BookSerializer(serializers.ModelSerializer):
         
         def create(self, validated_data):
             return Book.objects.create(**validated_data)  
-    
+
 
 class BookKeywordsSerializer(serializers.ModelSerializer):
     keywords = KeywordSerializer(many=True, read_only=True)

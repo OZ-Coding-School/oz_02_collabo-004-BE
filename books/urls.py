@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 '''
+app.urls에 직접 입력
+
 urlpatterns = [
     path("", views.Books.as_view()), # 등록완료 상태인 도서 리스트 불러오기
     path("all/", views.BookList.as_view()), # 전체 도서 리스트 불러오기
