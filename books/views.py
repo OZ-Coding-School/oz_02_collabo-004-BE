@@ -39,6 +39,7 @@ class BookList(generics.ListAPIView):
 
     handle_exception = custom_handle_exception
 
+
 # 개별 도서 리스트 관리 및 개별 도서 정보 수정하기
 class BookDetail(generics.RetrieveUpdateAPIView):
     queryset = Book.objects.all()
