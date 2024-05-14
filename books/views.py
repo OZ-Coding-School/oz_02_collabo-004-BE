@@ -1,5 +1,4 @@
 from django.shortcuts import render
-# from rest_framework.views import APIView
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from .models import Book
@@ -39,3 +38,13 @@ class BookList(generics.ListAPIView):
     # permission_classes = [IsStaffOrReadOnly]
 
     handle_exception = custom_handle_exception
+
+
+# 개별 도서 리스트 관리 및 개별 도서 정보 수정하기
+class BookDetail(generics.RetrieveUpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    # permission_classes = [IsStaffOrReadOnly]
+
+    handle_exception = custom_handle_exception
+
