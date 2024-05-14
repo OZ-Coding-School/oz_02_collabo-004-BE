@@ -1,3 +1,11 @@
 books/__pycache__
 books/migrations
 README.md
+challenge_spoilers/__pycache__
+challenge_spoilers/migrations
+keywords/__pycache__
+keywords/migrations
+reviews/__pycache__
+reviews/migrations
+spoilers/__pycache__
+spoilers/migrations
