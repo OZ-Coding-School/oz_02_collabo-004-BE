@@ -42,13 +42,16 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    ]
+
+CUSTOM_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -59,8 +62,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
     'challenges',
-    'payment'
-]
+    'payment',
+    'books',
+    'challenge_spoilers',
+    'keywords',
+    'reviews',
+    'spoilers',
+    ]
+
+INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
