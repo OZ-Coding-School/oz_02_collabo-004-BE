@@ -45,3 +45,18 @@ class SpoilerComment(APIView): #챌린지 스포일러에 전체 댓글 가져�
         comments = Comment.objects.filter(spoiler_info=spoiler)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
+    
+class UpdateComment(APIView): # 챌린지용 스포일러에 댓글 업데이트 하기 (관리자, 결제유저만 가능)
+    #permission_classes = [IsOwnerOrStaff]
+
+    def put(self, request, comment_id): 
+        try:
+            comment = Comment.objects.get(pk=comment_id)
+        except Comment.DoesNotExist:
+            return Response({"message": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
