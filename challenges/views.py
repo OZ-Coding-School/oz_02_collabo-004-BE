@@ -139,3 +139,17 @@ class CreateDIComment(APIView):  #챌린지 스포일러에 댓글 생성하기 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ChallengeSpoilerComment(APIView): #챌린지 스포일러에 전체 댓글 가져오기 (관리자, 결제유저만 가능)
+    #permission_classes = [IsPaidUserOrStaff]
+
+    def get(self, request, challengespoiler_id):
+        try:
+            challengespoiler = ChallengeSpoiler.objects.get(pk=challengespoiler_id)
+        except ChallengeSpoiler.DoesNotExist:
+            return Response({"error": "ChallengeSpoiler not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # challengespoiler_id에 연결된 DoItComment 댓글들을 가져옵니다.
+        doit_comments = DoItComment.objects.filter(challengespoiler_info=challengespoiler)
+        serializer = DoItCommentSerializer(doit_comments, many=True)
+        return Response(serializer.data)
