@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Django #
 *.log
 *.pot
@@ -145,3 +146,10 @@ books/__pycache__
 books/migrations
 README.md
 >>>>>>> aac21ae82103c1484657cfe04916effb3cd9835b
+=======
+books/__pycache__
+books/migrations
+README.md
+challenge_spoilers/__pycache__
+challenge_spoilers/migrations
+>>>>>>> f44f06561be50bcb0e409546b11d78cf90202011
