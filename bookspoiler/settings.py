@@ -19,15 +19,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-
-
 def get_env_variable(var_name):
     try:
         return os.environ[var_name]
     except KeyError:
         error_msg = 'set the {} environment varialbe'.format(var_name)
         raise ImproperlyConfigured(error_msg)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -103,21 +100,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bookspoiler.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 개발 및 테스트용 데이터 베이스
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bookspoiler',
-        'USER': 'admin',
-        'PASSWORD': 'xGLk8oNu308b25HYHErR',
-        'HOST': 'bookspoiler.chgm8qcysmvv.ap-northeast-2.rds.amazonaws.com',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    
+    # 배포용 데이터 베이스
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'bookspoiler',
+    #     'USER': 'admin',
+    #     'PASSWORD': 'xGLk8oNu308b25HYHErR',
+    #     'HOST': 'bookspoiler.chgm8qcysmvv.ap-northeast-2.rds.amazonaws.com',
+    #     'PORT': '3306',
+    # }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -137,7 +139,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -148,7 +149,6 @@ TIME_ZONE = 'Asia/Seoul'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
