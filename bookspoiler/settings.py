@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import os, environ
+import os
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
 from datetime import timedelta
@@ -17,7 +17,7 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 
 def get_env_variable(var_name):
     try:
@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.kakao',
+    'challenges',
+    'payment'
 ]
 
 MIDDLEWARE = [
@@ -95,8 +97,12 @@ WSGI_APPLICATION = 'bookspoiler.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bookspoiler',
+        'USER': 'admin',
+        'PASSWORD': 'xGLk8oNu308b25HYHErR',
+        'HOST': 'bookspoiler.chgm8qcysmvv.ap-northeast-2.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
