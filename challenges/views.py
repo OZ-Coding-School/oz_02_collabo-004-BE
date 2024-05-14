@@ -115,3 +115,27 @@ class UserChallengeDo(APIView):  # 챌린지 참여현황 가져오기 - 몇 % �
             })
 
         return Response(user_doing)
+    
+
+# challenge용 스포일러 댓글관련
+class CreateDIComment(APIView):  #챌린지 스포일러에 댓글 생성하기 (관리자, 결제유저만 가능)
+    #permission_classes = [IsPaidUserOrStaff]
+
+    def post(self, request, challengespoiler_id):
+        try:
+            challengespoiler = ChallengeSpoiler.objects.get(pk=challengespoiler_id)
+        except ChallengeSpoiler.DoesNotExist:
+            return Response({"error": "ChallengeSpoiler not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # 요청 데이터에 spoiler_id와 user 정보 추가하여 DoItCommentSerializer 생성
+        data_with_challengespoiler_id = request.data.copy()
+        data_with_challengespoiler_id['challengespoiler_info'] = challengespoiler_id
+        data_with_challengespoiler_id['user'] = request.user.id  # 현재 사용자 정보를 추가
+        
+        serializer = DoItCommentSerializer(data=data_with_challengespoiler_id)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
