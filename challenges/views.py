@@ -168,3 +168,20 @@ class UpdateDIComment(APIView): # 챌린지용 스포일러에 댓글 업데이�
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class DeleteDIComment(APIView): # 챌린지용 스포일러에 댓글 삭제학기 (관리자, 결제유저만 가능)
+    #permission_classes = [IsPaidUserOrStaff]
+    
+    def post(self, request, doitcomment_id): 
+        doitcomment_id = request.data.get('doitcomment_id')
+
+        if not doitcomment_id:
+            return Response({"error":"사용자가 아닙니다."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            doitcomment = DoItComment.objects.get(id=doitcomment_id)
+        except DoItComment.DoesNotExist:
+            return Response({"message": "DoItComment not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        doitcomment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
