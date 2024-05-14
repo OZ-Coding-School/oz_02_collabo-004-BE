@@ -12,3 +12,12 @@ class CreateSpoiler(generics.CreateAPIView):
         serializer.save()
 
     handle_exception = custom_handle_exception
+
+
+# 수정 및 불러오기
+class SpoilerDetail(generics.RetrieveUpdateAPIView):
+
+    serializer_class = SpoilerSerializer
+    queryset = Spoiler.objects.all()
+
+    handle_exception = custom_handle_exception
