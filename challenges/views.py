@@ -51,3 +51,14 @@ class UpdateChallenge(APIView):  # 챌린지 정보 업데이트 하기 (관리�
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class  UserChallengeList(APIView): # 사용자가 신청한 챌린지 리스트 가져오기 (관리자, 결제유저만 가능)
+    #permission_classes=[IsPaidUserOrStaff]
+
+    def get(self, request, user_id):
+        try:
+            user_challenges = ChallengeInfo.objects.filter(user_id=user_id)
+            serializer = ChallengeInfoSerializer(user_challenges, many=True)
+            return Response(serializer.data)
+        except ChallengeInfo.DoesNotExist:
+            return Response({"error": "User challenges not found"}, status=status.HTTP_404_NOT_FOUND)
