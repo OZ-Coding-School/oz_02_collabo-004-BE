@@ -28,3 +28,11 @@ class CreateChallenge(APIView):  # 신규챌린지 생성하기 (관리자만 �
             print(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ChallengeList(APIView): # 전체 챌린지 리스트 가져오기 (관리자, 로그인유저만 가능)
+    #permission_classes=[IsOwnerOrStaff] #권한부여
+
+    def get(self, request): 
+        challenges = ChallengeInfo.objects.all()
+        serializer = ChallengeInfoSerializer(challenges, many = True) 
+        return Response(serializer.data)

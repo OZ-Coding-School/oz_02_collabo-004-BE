@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Django #
 *.log
 *.pot
@@ -139,3 +140,8 @@ GitHub.sublime-settings
 # ETC
 .mwb
 .pdf
+=======
+books/__pycache__
+books/migrations
+README.md
+>>>>>>> aac21ae82103c1484657cfe04916effb3cd9835b
