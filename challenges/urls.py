@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CreateChallenge, ChallengeList, UpdateChallenge, UserChallengeList, UserChallengeDetail, UserChallengeDo, CreateDIComment, ChallengeSpoilerComment, UpdateDIComment, DeleteDIComment, UserChallengeStatus
+from .views import CreateChallenge, ChallengeList, UpdateChallenge, UserChallengeList, UserChallengeDetail, UserChallengeDo, CreateDIComment, ChallengeSpoilerComment, UpdateDIComment, DeleteDIComment, UserChallengeStatus, TotalChallenge
 
 urlpatterns = [
     # 챌린지 생성하기 # 전체 챌린지 리스트 가져오기 # 챌린지 정보 업데이트 하기  
@@ -15,6 +15,8 @@ urlpatterns = [
     path('mychallenge/doing/<int:user_id>', UserChallengeDo.as_view(), name='userchallenge_doing'),
     # 사용자의 챌린지 완료,미완료 여부
     path('mychallenge/status/<int:user_id>/<int:challengeinfo_id>', UserChallengeStatus.as_view(), name='userchallenge_status'),
+    # 총 진행중인 챌린지 개수 가져오기
+    path('challenge/total', TotalChallenge.as_view(), name='total_challenge'),
 
     # 챌린지 스포일러 댓글 생성, 가져오기, 수정, 삭제
     path("dicomment/create/<int:challengespoiler_id>",CreateDIComment.as_view(), name="create_dicomment"),
