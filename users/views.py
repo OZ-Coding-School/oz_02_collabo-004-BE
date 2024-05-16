@@ -90,6 +90,12 @@ class KakaoView(APIView):
         client_id = '4905cf8031206127649b9eadee6047ee'
 
         return redirect(f'{kakao_api}&client_id={client_id}&redirect_uri={redirect_uri}')
+    
+# 전화번호 형식 변환 함수
+def convert_phone_number_format(phone_number):
+    if phone_number.startswith('+82 '):
+        return '0' + phone_number.split(' ')[1].replace('-', '')        
+    return phone_number
 
 class KakaoCallBackView(APIView):
     def get(self, request):
@@ -111,38 +117,41 @@ class KakaoCallBackView(APIView):
         print(kakao_user) #제대로 받아오는지 테스트를 위한 프린트 요청
                 
         # 카카오 계정으로 사용자 조회 또는 생성
-        nickname = kakao_user['properties']['nickname']
-        profile_img = kakao_user['properties']['profile_image']
         email = kakao_user.get('kakao_account', {}).get('email', None)
-        phone_number = kakao_user.get('kakao_account', {}).get('phone_number', None)
         if email:
-            user, created = User.objects.get_or_create(email=email, defaults={'nickname':nickname, 'profile_img':profile_img, 'phone_number':phone_number})
-            user.set_unusable_password()
-            user.save()
+            # 데이터베이스에서 해당 이메일을 가진 사용자 조회
+            try:
+                user = User.objects.get(email=email)                
+            # 사용자가 존재하지 않으면 새 사용자 생성
+            except User.DoesNotExist:                
+                # 전화번호 형식 변환
+                transform_phone_number = kakao_user.get('kakao_account', {}).get('phone_number', '')                
+                phone_number = convert_phone_number_format(transform_phone_number)
 
-            # 로그인 처리
+                serializer = CreateUserSerializer(data={
+                    'email': email, 'nickname': kakao_user['properties']['nickname'],
+                    'profile_img': kakao_user['properties'].get('profile_image', ''), 'phone_number': phone_number})
+                
+                if serializer.is_valid():
+                    user = serializer.save()
+                    user.set_unusable_password()
+                    user.save()
+                else:
+                    return Response({'message':'잘못된 요청입니다.', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+            # 토큰 생성
+            refresh = RefreshToken.for_user(user)
+            response = Response({'refresh':str(refresh), 'access':str(refresh.access_token),})
+
+            # 쿠키에 토큰 저장 (세션 쿠키로 설정)
+            response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='None', secure=True)
+            response.set_cookie('refresh_token', str(refresh), httponly=True, samesite='None', secure=True)
+            return response
+        
         else:
             return Response({'message':'카카오 계정 이메일이 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-            
-        # 토큰 생성
-        refresh = RefreshToken.for_user(user)
-        response = Response({'refresh':str(refresh), 'access':str(refresh.access_token),})
-
-        # 쿠키에 토큰 저장 (세션 쿠키로 설정)
-        response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='None', secure=True)
-        response.set_cookie('refresh_token', str(refresh), httponly=True, samesite='None', secure=True)
-
-        return response
-
-class CreateUserView(APIView):
-    def post(self, request):
-        serializer = CreateUserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            if user:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({'message':'잘못된 요청입니다.'}, status=status.HTTP_400_BAD_REQUEST)
     
 class KakaoLogoutView(APIView):
     permission_classes = [IsAuthenticated]

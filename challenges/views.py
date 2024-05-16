@@ -11,6 +11,7 @@ from challenges.serializers import ChallengeInfoSerializer,DoItCommentSerializer
 from books.serializers import BookSerializer
 from users.models import User
 from books.models import Book
+from payment.models import Payment
 #from permissions import IsOwnerOrStaff, IsPaidUserOrStaff, IsStaff
 
 # http method  정의    
@@ -57,64 +58,84 @@ class  UserChallengeList(APIView): # 사용자가 신청한 챌린지 리스트 
 
     def get(self, request, user_id):
         try:
-            user_challenges = ChallengeInfo.objects.filter(user_id=user_id)
+            user_payments = Payment.objects.filter(user_id=user_id)
+            challenge_ids = [payment.challenge_info_id for payment in user_payments]
+
+            user_challenges = ChallengeInfo.objects.filter(id__in=challenge_ids)
+            
             serializer = ChallengeInfoSerializer(user_challenges, many=True)
+            
             return Response(serializer.data)
-        except ChallengeInfo.DoesNotExist:
-            return Response({"error": "User challenges not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Payment.DoesNotExist:
+            return Response({"error": "User payments not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class UserChallengeDetail(APIView): # 신청한 챌린지 상세사항 보기(관리자, 결제유저만 가능) 
+class UserChallengeDetail(APIView): # 신청한 챌린지 상세사항 보기(관리자, 결제유저만 가능)
     #permission_classes=[IsPaidUserOrStaff] 
-    def get(self, request, challengeinfo_id, user_id):
+    def get(self, request, user_id, challengeinfo_id):
         try:
-            challenge_info = ChallengeInfo.objects.get(pk=challengeinfo_id)
-        except ChallengeInfo.DoesNotExist:
-            return Response({"error": "Challenge not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        # 챌린지 정보에 연결된 책 정보 가져오기
-        book_serializer = BookSerializer(challenge_info.book)
+            # 사용자가 결제한 챌린지 정보를 가져옵니다.
+            user_payments = Payment.objects.filter(user_id=user_id)
+            challenge_ids = [payment.challenge_info_id for payment in user_payments]
+            filtered_challenge = ChallengeInfo.objects.filter(id=challengeinfo_id, id__in=challenge_ids).first()
 
-        # 모든 정보를 조합하여 응답 데이터 구성
-        response_data = {
-            "challenge_info" : ChallengeInfoSerializer(challenge_info).data,
-            "book_info": book_serializer.data
-        }
+            if filtered_challenge:
+                    
+                    challenge_serializer = ChallengeInfoSerializer(filtered_challenge)
 
-        return Response(response_data)
+                    book_serializer = BookSerializer(filtered_challenge.book)
+
+                    response_data = {
+                        "challenge_info": challenge_serializer.data,
+                        "book_info": book_serializer.data,
+                    }
+
+                    return Response(response_data)
+            else:
+                return Response({"error": "해당 챌린지 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        except Payment.DoesNotExist:
+            return Response({"error": "사용자의 결제 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
     
 class UserChallengeDo(APIView):  # 챌린지 참여현황 가져오기 - 몇 % 진행됬는지 - 구현 순서 중
 
     def get(self, request, user_id):
-        # 해당 사용자가 신청한 모든 챌린지 가져오기
-        user_challenges = ChallengeInfo.objects.filter(user_id=user_id)
-        user_doing = []
+        try:
+            # 해당 사용자가 신청한 모든 챌린지 가져오기
+            user_payments = Payment.objects.filter(user_id=user_id)
+            challenge_ids = [payment.challenge_info_id for payment in user_payments]
+            user_challenges = ChallengeInfo.objects.filter(id__in=challenge_ids) #id=challengeinfo_id
+            user_doing = []
 
-        for challenge_info in user_challenges:
-            total_days = 5  # 도전 챌린지 총 day 수
-            challenge_spoilers = ChallengeSpoiler.objects.filter(challenge_info=challenge_info)
-            completed_days = 0
+            for challenge_info in user_challenges:
+                total_days = 5  # 도전 챌린지 총 day 수
+                challenge_spoilers = ChallengeSpoiler.objects.filter(challenge_info=challenge_info)
+                completed_days = 0
 
-            for day in range(1, total_days + 1):
-                # 해당 챌린지의 특정 일차별 스포일러 가져오기
-                try:
-                    spoiler = challenge_spoilers.get(day=str(day))
-                except ChallengeSpoiler.DoesNotExist:
-                    continue
-                
-                # 해당 일차별 스포일러에 달린 사용자의 댓글 수 계산
-                comment_days = DoItComment.objects.filter(challengespoiler_info=spoiler, user_id=user_id).count()
-                if comment_days > 0:
-                    completed_days += 1
+                for day in range(1, total_days + 1):
+                    # 해당 챌린지의 특정 일차별 스포일러 가져오기
+                    try:
+                        spoiler = challenge_spoilers.get(day=str(day))
+                    except ChallengeSpoiler.DoesNotExist:
+                        continue
+                    
+                    # 해당 일차별 스포일러에 달린 사용자의 댓글 수 계산
+                    comment_days = DoItComment.objects.filter(challengespoiler_info=spoiler, user_id=user_id).count()
+                    if comment_days > 0:
+                        completed_days += 1
 
-            # 챌린지의 완료 일수를 기반으로 사용자의 수행 백분율 계산
-            doing_percentage = (completed_days / total_days) * 100
-            user_doing.append({
-                'user_id': user_id,
-                'challengeinfo_id': challenge_info.id,
-                'user_doing': int(doing_percentage)  # 소수점 이하 버림
-            })
+                # 챌린지의 완료 일수를 기반으로 사용자의 수행 백분율 계산
+                doing_percentage = (completed_days / total_days) * 100
 
-        return Response(user_doing)
+                user_doing.append({
+                    'user_id': user_id,
+                    'challengeinfo_id': challenge_info.id,
+                    'user_doing': int(doing_percentage)  # 소수점 이하 버림
+                })
+
+            return Response(user_doing)
+    
+        except Payment.DoesNotExist:
+                return Response({"error": "사용자의 결제 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
     
 
 # challenge용 스포일러 댓글관련

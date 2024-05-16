@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=255, unique=True)
     nickname = models.CharField(max_length=255, verbose_name='닉네임', unique=True)
-    mbti = models.CharField(max_length=255)
+    mbti = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=255, verbose_name='휴대전화번호')
     profile_img = models.URLField(max_length=255)
     is_staff = models.BooleanField(default=False, verbose_name='운영진')
