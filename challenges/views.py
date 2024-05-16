@@ -7,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import NotFound
 
 from .models import ChallengeInfo, ChallengeSpoiler, DoItComment
-from .serializers import ChallengeInfoSerializer, ChallengeSpoilerSerializer, DoItCommentSerializer
+from challenges.serializers import ChallengeInfoSerializer,DoItCommentSerializer
 from books.serializers import BookSerializer
 from users.models import User
 from books.models import Book
