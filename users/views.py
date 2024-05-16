@@ -114,7 +114,7 @@ class KakaoCallBackView(APIView):
         kakao_user_api = 'https://kapi.kakao.com/v2/user/me'
         header = {'Authorization':f'Bearer ${access_token}'}
         kakao_user = requests.get(kakao_user_api, headers=header).json()
-        print(kakao_user) #제대로 받아오는지 테스트를 위한 프린트 요청
+        # print(kakao_user) #제대로 받아오는지 테스트를 위한 프린트 요청
                 
         # 카카오 계정으로 사용자 조회 또는 생성
         email = kakao_user.get('kakao_account', {}).get('email', None)
@@ -143,9 +143,10 @@ class KakaoCallBackView(APIView):
 
             # 토큰 생성
             refresh = RefreshToken.for_user(user)
-            response = Response({'refresh':str(refresh), 'access':str(refresh.access_token),})
+            # response = Response({'refresh':str(refresh), 'access':str(refresh.access_token),})
 
             # 쿠키에 토큰 저장 (세션 쿠키로 설정)
+            response = HttpResponseRedirect('http://localhost:8000/users') # 로그인 완료 시 리디렉션할 URL
             response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='None', secure=True)
             response.set_cookie('refresh_token', str(refresh), httponly=True, samesite='None', secure=True)
             return response

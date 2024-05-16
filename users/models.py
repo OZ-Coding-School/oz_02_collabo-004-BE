@@ -64,4 +64,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         super(User, self).save(*args, **kwargs)
     
     class Meta:
-        db_table = 'users'
+        db_table = 'Users'
