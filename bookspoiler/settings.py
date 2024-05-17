@@ -104,6 +104,7 @@ WSGI_APPLICATION = 'bookspoiler.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+<<<<<<< HEAD
     
     #배포용 데이터 베이스
     'default': {
@@ -114,6 +115,23 @@ DATABASES = {
     'HOST': 'bookspoiler.chgm8qcysmvv.ap-northeast-2.rds.amazonaws.com',
     'PORT': '3306',
  }
+=======
+    # # 개발 및 테스트용 데이터 베이스
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    
+    # 배포용 데이터 베이스
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bookspoiler',
+        'USER': 'admin',
+        'PASSWORD': 'xGLk8oNu308b25HYHErR',
+        'HOST': 'bookspoiler.chgm8qcysmvv.ap-northeast-2.rds.amazonaws.com',
+        'PORT': '3306',
+    }
+>>>>>>> 082731488680f7da3a3ad364c2ae1ac4adf9a6e9
 }
 
 # Password validation
@@ -178,6 +196,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'

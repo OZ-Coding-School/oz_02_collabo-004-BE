@@ -6,9 +6,15 @@ from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import NotFound
 
+<<<<<<< HEAD
 from .models import ChallengeInfo, ChallengeSpoiler, DoItComment
 from challenges.serializers import ChallengeInfoSerializer,DoItCommentSerializer
+=======
+from .models import ChallengeInfo,DoItComment
+from .serializers import ChallengeInfoSerializer, DoItCommentSerializer
+>>>>>>> 082731488680f7da3a3ad364c2ae1ac4adf9a6e9
 from books.serializers import BookSerializer
+from challenge_spoilers.models import ChallengeSpoiler
 from users.models import User
 from books.models import Book
 from payment.models import Payment
@@ -137,6 +143,63 @@ class UserChallengeDo(APIView):  # 챌린지 참여현황 가져오기 - 몇 % �
     
         except Payment.DoesNotExist:
                 return Response({"error": "사용자의 결제 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+class UserChallengeStatus(APIView):
+    def get(self, request, user_id, challengeinfo_id):
+        try:
+            user_payments = Payment.objects.filter(user_id=user_id)
+            challenge_ids = [payment.challenge_info_id for payment in user_payments]
+
+            if int(challengeinfo_id) not in challenge_ids:
+                return Response({"error": "해당 챌린지는 결제되지 않았습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+            filtered_challenge = ChallengeInfo.objects.get(id=challengeinfo_id)
+
+            challenge_spoilers = ChallengeSpoiler.objects.filter(challenge_info=filtered_challenge)
+
+            user_comments = DoItComment.objects.filter(user_id=user_id)
+
+            days_status = {}
+            for day in range(1, 6):  
+                day_str = str(day)
+                day_completed = False
+
+                spoiler = challenge_spoilers.filter(day=day_str).first()
+            
+                if spoiler:
+                    if user_comments.filter(challengespoiler_info=spoiler).exists():
+                        day_completed = True
+
+                days_status[day_str] = day_completed
+
+            response_data = {
+                "user_id": user_id,
+                "challenge_info_id": challengeinfo_id,
+                "days_status": days_status
+            }
+
+            return Response(response_data)
+
+        except ChallengeInfo.DoesNotExist:
+            return Response({"error": "해당 챌린지 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+        
+class TotalChallenge(APIView):
+    def get(self, request):
+        try:
+            payments = Payment.objects.all()
+
+            unique_challenge_ids = set()
+
+            for payment in payments:
+                challenge_id = payment.challenge_info_id
+                unique_challenge_ids.add(challenge_id)
+
+            total_challenges_count = len(unique_challenge_ids)
+
+            return Response({"진행중인 챌린지 개수": total_challenges_count})
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
 # challenge용 스포일러 댓글관련
