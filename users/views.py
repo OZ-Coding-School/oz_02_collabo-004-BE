@@ -62,26 +62,39 @@ class MyInfoView(APIView):
         # if spoiler_response.status_code == 200:
         #     user_data['spoiler_info'] = spoiler_response.json()
 
-        return Response(user_data)
+        return Response(user_data)    
     
-    def put(self, request):
-        user = request.user
-        serializer = UpdateUserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response({'message':'잘못된 요청입니다.'}, status=status.HTTP_400_BAD_REQUEST)
-    
-    #회원탈퇴 부분
     def post(self, request):
         action = request.data.get('action')
-        if action == '회원탈퇴':
-            user = request.user
-            user.is_active = False
-            user.save()
-            return Response({'message':'회원탈퇴가 완료되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+
+        if action == 'update_mbti':
+            return self.update_mbti(request)
+        elif action == 'withdraw':
+            return self.withdraw(request)
         else:
             return Response({'message':'잘못된 요청입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    def update_mbti(self,request):
+        user = request.user
+        mbti = request.data.get('mbti')
+        if mbti:
+            user.mbti = mbti
+            user.save()
+            return Response({'message':'MBTI가 성공적으로 수정되었습니다.', 'mbti':user.mbti})
+        return Response({'message':'유효한 MBTI 값을 입력해주세요.'}, status=status.HTTP_400_BAD_REQEUST)
+    
+    def withdraw(self, request):
+        user = request.user
+        user.is_active = False
+        user.is_paid = False
+        user.is_staff = False        
+        user.save()
+
+        # 회원탈퇴 후 토큰 삭제
+        response = Response({'message':'회원탈퇴가 완료되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response
     
 class KakaoView(APIView):
     def get(self, request):
@@ -121,7 +134,11 @@ class KakaoCallBackView(APIView):
         if email:
             # 데이터베이스에서 해당 이메일을 가진 사용자 조회
             try:
-                user = User.objects.get(email=email)                
+                user = User.objects.get(email=email)
+                # 탈퇴했던 회원이 재가입을 하는 경우인지 확인
+                if not user.is_active:
+                    user.is_active = True
+                    user.save()
             # 사용자가 존재하지 않으면 새 사용자 생성
             except User.DoesNotExist:                
                 # 전화번호 형식 변환
@@ -143,8 +160,7 @@ class KakaoCallBackView(APIView):
 
             # 토큰 생성
             refresh = RefreshToken.for_user(user)
-            # response = Response({'refresh':str(refresh), 'access':str(refresh.access_token),})
-
+            
             # 쿠키에 토큰 저장 (세션 쿠키로 설정)
             response = HttpResponseRedirect('http://localhost:8000/users') # 로그인 완료 시 리디렉션할 URL
             response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='None', secure=True)
