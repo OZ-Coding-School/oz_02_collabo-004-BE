@@ -9,7 +9,8 @@ class ChallengeInfo(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) # 자동으로 생성되었는지 여부
     updated_at = models.DateTimeField(auto_now=True)
-
+    class Meta:
+        db_table = 'ChallengeInfo'
 
 class DoItComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
