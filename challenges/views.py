@@ -5,14 +5,9 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import NotFound
-
-<<<<<<< HEAD
 from .models import ChallengeInfo, ChallengeSpoiler, DoItComment
 from challenges.serializers import ChallengeInfoSerializer,DoItCommentSerializer
-=======
-from .models import ChallengeInfo,DoItComment
-from .serializers import ChallengeInfoSerializer, DoItCommentSerializer
->>>>>>> 082731488680f7da3a3ad364c2ae1ac4adf9a6e9
+
 from books.serializers import BookSerializer
 from challenge_spoilers.models import ChallengeSpoiler
 from users.models import User
