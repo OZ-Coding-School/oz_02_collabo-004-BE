@@ -44,7 +44,7 @@ class PaymentView(APIView):
         return Response(data=serializer.data)
 
 class PaymentListView(APIView):
-    @api_view(['GET',])
+    
     def get(self,request,user_id):
         pay= Payment.objects.filter(user_id=user_id)
         serializers = PaymentSerializer(pay,many=True)
