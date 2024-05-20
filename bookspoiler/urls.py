@@ -25,5 +25,6 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('payment/',include('payment.urls')),
-    path('challenge/',include('challenges.urls')),
+    path('challenges/',include('challenges.urls')),
+    path('comments/',include('comments.urls')),
 ]
