@@ -1,5 +1,5 @@
 from django.db import models
-# from challenge_info.models import ChallengeInfo
+from challenges.models import ChallengeInfo
 
 class ChallengeSpoiler(models.Model):
     day = models.CharField(max_length=1)
@@ -8,7 +8,7 @@ class ChallengeSpoiler(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # challenge_info_id = models.ForeignKey(ChallngeInfo, on_delete=models.CASCADE)
+    challenge_info_id = models.ForeignKey(ChallengeInfo, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return f'{self.day}일차 챌린지 스포일러 : {self.title}'
