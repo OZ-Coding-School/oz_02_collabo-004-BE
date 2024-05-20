@@ -100,6 +100,7 @@ class KakaoView(APIView):
     def get(self, request):
         kakao_api = 'https://kauth.kakao.com/oauth/authorize?response_type=code'
         redirect_uri = 'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000/users/kakao/callback'
+        # redirect_uri = 'http://localhost:8000/users/kakao/callback'
         client_id = '4905cf8031206127649b9eadee6047ee'
 
         return redirect(f'{kakao_api}&client_id={client_id}&redirect_uri={redirect_uri}')
@@ -116,6 +117,7 @@ class KakaoCallBackView(APIView):
             'grant_type' : 'authorization_code',
             'client_id' : '4905cf8031206127649b9eadee6047ee',
             'redirection_uri' : 'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000/users/kakao/',
+            # 'redirection_uri' : 'http://localhost:8000/users/kakao/',
             'code' : request.GET['code'],
             'client_secret': '20AWYr2edlbpkP0Lc4JJPhzXFZNP2HmK'
         }
@@ -125,7 +127,7 @@ class KakaoCallBackView(APIView):
         
         # 카카오 토큰 정보 가져오기
         kakao_user_api = 'https://kapi.kakao.com/v2/user/me'
-        header = {'Authorization':f'Bearer ${access_token}'}
+        header = {'Authorization':f'Bearer {access_token}'}
         kakao_user = requests.get(kakao_user_api, headers=header).json()
         # print(kakao_user) #제대로 받아오는지 테스트를 위한 프린트 요청
                 
@@ -162,7 +164,8 @@ class KakaoCallBackView(APIView):
             refresh = RefreshToken.for_user(user)
             
             # 쿠키에 토큰 저장 (세션 쿠키로 설정)
-            response = HttpResponseRedirect('http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000') # 로그인 완료 시 리디렉션할 URL
+            response = HttpResponseRedirect('http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000/users/myinfo') # 로그인 완료 시 리디렉션할 URL
+            # response = HttpResponseRedirect('http://localhost:8000/users/') # 로그인 완료 시 리디렉션할 URL
             response.set_cookie('access_token', str(refresh.access_token), httponly=True, samesite='None', secure=True)
             response.set_cookie('refresh_token', str(refresh), httponly=True, samesite='None', secure=True)
             return response
