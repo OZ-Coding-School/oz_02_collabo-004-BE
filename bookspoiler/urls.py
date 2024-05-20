@@ -43,4 +43,6 @@ urlpatterns = [
     path("review/", include("reviews.urls")), # 추천 서평 관리
     path("book/<int:book_id>/spoiler/", include("spoilers.urls")), # 일반 스포일러 관리
     path("<challenge_info_id>/challenge_spoilers_list", ChallengeFiveSpoilers.as_view()), # 챌린지별 6일차 챌린지 스포일러 리스트
+    path('challenges/',include('challenges.urls')),
+    path('comments/',include('comments.urls')),
 ]
