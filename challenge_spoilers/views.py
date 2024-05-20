@@ -1,14 +1,15 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics
 from .serializers import ChallengeSpoilerSerializer
 from .models import ChallengeSpoiler
-from books.views import custom_handle_exception
+from books.views import custom_handle_exception, IsStaffOrReadOnly
 
 
 
 # 생성하기
 class CreateChallengeSpoiler(generics.CreateAPIView):
     serializer_class = ChallengeSpoilerSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -20,6 +21,7 @@ class CreateChallengeSpoiler(generics.CreateAPIView):
 class ChallengeSpoilerDetail(generics.RetrieveUpdateAPIView):
 
     serializer_class = ChallengeSpoilerSerializer
+    permission_classes = [IsStaffOrReadOnly]
     queryset = ChallengeSpoiler.objects.all()
 
     handle_exception = custom_handle_exception
@@ -33,7 +35,7 @@ class ChallengeFiveSpoilers(generics.ListAPIView):
     def get_queryset(self):
         challenge_info_id = self.kwargs.get('challenge_info_id')
         
-        five_spoilers = Review.objects.filter(challenge_info_id=challenge_info_id)
+        five_spoilers = ChallengeSpoiler.objects.filter(challenge_info_id=challenge_info_id)
 
         return five_spoilers
 

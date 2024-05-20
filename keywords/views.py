@@ -3,12 +3,13 @@ from .serializers import KeywordSerializer
 from rest_framework import generics
 from rest_framework.exceptions import NotFound
 from .models import Keyword
-from books.views import custom_handle_exception
+from books.views import custom_handle_exception, IsStaffOrReadOnly
 
 # 전체 키워드 목록 조회
 class KeywordList(generics.ListAPIView):
     queryset = Keyword.objects.all()
     serializer_class = KeywordSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     handle_exception = custom_handle_exception
 
@@ -16,6 +17,7 @@ class KeywordList(generics.ListAPIView):
 # 생성하기
 class CreateKeyword(generics.CreateAPIView):
     serializer_class = KeywordSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -28,6 +30,7 @@ class CreateKeyword(generics.CreateAPIView):
 class KeywordDetail(generics.RetrieveUpdateAPIView):
 
     serializer_class = KeywordSerializer
+    permission_classes = [IsStaffOrReadOnly]
     queryset = Keyword.objects.all()
 
     handle_exception = custom_handle_exception
