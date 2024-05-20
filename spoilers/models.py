@@ -1,7 +1,6 @@
 from django.db import models
 from books.models import Book
-from django.utils import timezone
-# from users.models import User
+from users.models import User
 
 
 class Spoiler(models.Model):
@@ -12,7 +11,7 @@ class Spoiler(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
