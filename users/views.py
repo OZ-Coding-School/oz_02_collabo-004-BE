@@ -99,7 +99,7 @@ class MyInfoView(APIView):
 class KakaoView(APIView):
     def get(self, request):
         kakao_api = 'https://kauth.kakao.com/oauth/authorize?response_type=code'
-        redirect_uri = 'http://localhost:8000/users/kakao/callback'
+        redirect_uri = 'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000/users/kakao/callback'
         client_id = '4905cf8031206127649b9eadee6047ee'
 
         return redirect(f'{kakao_api}&client_id={client_id}&redirect_uri={redirect_uri}')
@@ -115,7 +115,7 @@ class KakaoCallBackView(APIView):
         data = {
             'grant_type' : 'authorization_code',
             'client_id' : '4905cf8031206127649b9eadee6047ee',
-            'redirection_uri' : 'http://localhost:8000/users/kakao/',
+            'redirection_uri' : 'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000/users/kakao/',
             'code' : request.GET['code'],
             'client_secret': '20AWYr2edlbpkP0Lc4JJPhzXFZNP2HmK'
         }
