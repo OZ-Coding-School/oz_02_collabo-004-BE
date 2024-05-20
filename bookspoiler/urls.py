@@ -37,10 +37,11 @@ urlpatterns = [
     path("book/<int:pk>/", books_views.BookDetail.as_view()), # 개별 도서 리스트 관리 및 개별 도서 정보 수정하기
     path("book/<int:book_id>/reviews", reviews_views.BookReviews.as_view()), # 책 별 추천서평 조회
     path("book/<int:book_id>/keywords", keywords_views.BookKeywords.as_view()), # 책 별 키워드 조회
-    path("<int:challenge_info_id>/", include("challenge_spoilers.urls")), # 챌린지 스포일러 관리
+    path("book/<int:book_id>/challenge_spoiler/", include("challenge_spoilers.urls")), # 챌린지 스포일러 관리 (book_id)
+    path("challenge/<int:challenge_info_id>/challenge_spoiler/", include("challenge_spoilers.urls")), # 챌린지 스포일러 관리 (challenge_info_id)
     path("keywords/", keywords_views.KeywordList.as_view()), # 전체 키워드 조회
     path("keyword/", include("keywords.urls")), # 개별 키워드 관리
     path("review/", include("reviews.urls")), # 추천 서평 관리
     path("book/<int:book_id>/spoiler/", include("spoilers.urls")), # 일반 스포일러 관리
-    path("<challenge_info_id>/challenge_spoilers_list", ChallengeFiveSpoilers.as_view()), # 챌린지별 6일차 챌린지 스포일러 리스트
+    path("challenge/<int:challenge_info_id>/challenge_spoiler_list", ChallengeFiveSpoilers.as_view()), # 챌린지별 6일차 챌린지 스포일러 리스트
 ]

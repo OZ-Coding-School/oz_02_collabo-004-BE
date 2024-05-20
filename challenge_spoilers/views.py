@@ -41,3 +41,17 @@ class ChallengeFiveSpoilers(generics.ListAPIView):
 
     handle_exception = custom_handle_exception
 
+# 책별 챌린지 스포일러 불러오기
+class BookFiveSpoilers(generics.ListAPIView):
+
+    serializer_class = ChallengeSpoilerSerializer
+
+    def get_queryset(self):
+        book_id = self.kwargs.get('book_id')
+        
+        five_spoilers = ChallengeSpoiler.objects.filter(book_id=book_id)
+
+        return five_spoilers
+
+
+
