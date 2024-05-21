@@ -178,6 +178,11 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://13.209.68.37:3000/",
+    "http://localhost:3000/",
+]
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 LOGIN_REDIRECT_URL = '/'
