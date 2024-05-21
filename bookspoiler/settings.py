@@ -181,13 +181,14 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://13.209.68.37:8000/",
-    "http://localhost:8000/",
+    'http://13.209.68.37:8000/',
+    'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000',
+    'http://localhost:8000/',
 ]
 
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SOCIALACCOUNT_LOGIN_ON_GET = True
