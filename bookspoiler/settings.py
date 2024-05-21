@@ -65,6 +65,8 @@ CUSTOM_APPS = [
     'keywords',
     'reviews',
     'spoilers',
+    'comments',
+    'doitcomments'
     ]
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS
