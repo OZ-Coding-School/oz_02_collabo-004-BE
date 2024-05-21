@@ -9,7 +9,7 @@ from books.models import Book
 # 생성하기
 class CreateReview(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -20,7 +20,7 @@ class CreateReview(generics.CreateAPIView):
 class ReviewDetail(generics.RetrieveUpdateAPIView):
 
     serializer_class = ReviewSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
     queryset = Review.objects.all()
 
     handle_exception = custom_handle_exception

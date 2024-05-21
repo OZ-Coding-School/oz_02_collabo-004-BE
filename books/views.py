@@ -47,7 +47,7 @@ class BookList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     pagination_class = PageNumberPagination
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
 
     handle_exception = custom_handle_exception
 
@@ -56,7 +56,7 @@ class BookList(generics.ListAPIView):
 class BookDetail(generics.RetrieveUpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
 
     handle_exception = custom_handle_exception
 
@@ -64,7 +64,7 @@ class BookDetail(generics.RetrieveUpdateAPIView):
 # 신규 도서 생성하기
 class BookCreate(generics.CreateAPIView):
     serializer_class = BookSerializer
-    permission_classes = [IsStaffOrReadOnly]  # 인증된 사용자만 접근 가능하도록 권한 설정
+    #permission_classes = [IsStaffOrReadOnly]  # 인증된 사용자만 접근 가능하도록 권한 설정
 
     def perform_create(self, serializer):
         serializer.save()
