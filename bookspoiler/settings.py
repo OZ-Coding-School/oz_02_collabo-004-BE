@@ -65,6 +65,8 @@ CUSTOM_APPS = [
     'keywords',
     'reviews',
     'spoilers',
+    'comments',
+    'doitcomments'
     ]
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS
@@ -177,6 +179,16 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://13.209.68.37:8000/',
+    'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000',
+    'http://localhost:8000/',
+]
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SOCIALACCOUNT_LOGIN_ON_GET = True

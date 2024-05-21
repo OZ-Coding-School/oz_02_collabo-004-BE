@@ -30,7 +30,9 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('payment/',include('payment.urls')),
-    path('challenge/',include('challenges.urls')),
+    path('challenges/',include('challenges.urls')),
+    path('challenges/',include('doitcomments.urls')),
+    path('comments/',include('comments.urls')),
     path("books/", books_views.Books.as_view()), # 등록완료 상태인 도서 리스트 불러오기
     path("books/all/", books_views.BookList.as_view()), # 전체 도서 리스트 불러오기
     path("book/create/", books_views.BookCreate.as_view()), # 신규 도서 생성하기
