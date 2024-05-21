@@ -9,7 +9,7 @@ from books.views import custom_handle_exception, IsStaffOrReadOnly
 # 생성하기
 class CreateChallengeSpoiler(generics.CreateAPIView):
     serializer_class = ChallengeSpoilerSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -21,7 +21,7 @@ class CreateChallengeSpoiler(generics.CreateAPIView):
 class ChallengeSpoilerDetail(generics.RetrieveUpdateAPIView):
 
     serializer_class = ChallengeSpoilerSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
     queryset = ChallengeSpoiler.objects.all()
 
     handle_exception = custom_handle_exception

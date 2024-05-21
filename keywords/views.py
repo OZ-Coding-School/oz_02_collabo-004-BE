@@ -9,7 +9,7 @@ from books.views import custom_handle_exception, IsStaffOrReadOnly
 class KeywordList(generics.ListAPIView):
     queryset = Keyword.objects.all()
     serializer_class = KeywordSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
 
     handle_exception = custom_handle_exception
 
@@ -17,7 +17,7 @@ class KeywordList(generics.ListAPIView):
 # 생성하기
 class CreateKeyword(generics.CreateAPIView):
     serializer_class = KeywordSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -30,7 +30,7 @@ class CreateKeyword(generics.CreateAPIView):
 class KeywordDetail(generics.RetrieveUpdateAPIView):
 
     serializer_class = KeywordSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    #permission_classes = [IsStaffOrReadOnly]
     queryset = Keyword.objects.all()
 
     handle_exception = custom_handle_exception
