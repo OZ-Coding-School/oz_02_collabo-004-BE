@@ -45,7 +45,7 @@ DJANGO_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',    
     ]
 
 CUSTOM_APPS = [
@@ -66,7 +66,8 @@ CUSTOM_APPS = [
     'reviews',
     'spoilers',
     'comments',
-    'doitcomments'
+    'doitcomments',
+    'corsheaders',
     ]
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS
@@ -80,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'bookspoiler.urls'
@@ -180,15 +182,25 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://13.209.68.37:8000/',
-    'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000',
-    'http://localhost:8000/',
-]
-
 CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://13.209.68.37:8000',
+    'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000',
+    'http://localhost:8000',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://13.209.68.37:8000',
+    'http://ec2-13-209-68-37.ap-northeast-2.compute.amazonaws.com:8000',
+    'http://localhost:8000',
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SOCIALACCOUNT_LOGIN_ON_GET = True
