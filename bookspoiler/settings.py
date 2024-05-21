@@ -181,9 +181,13 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://13.209.68.37:3000/",
-    "http://localhost:3000/",
+    "http://13.209.68.37:8000/",
+    "http://localhost:8000/",
 ]
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'None'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SOCIALACCOUNT_LOGIN_ON_GET = True
