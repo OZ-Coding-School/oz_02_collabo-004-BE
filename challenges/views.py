@@ -23,13 +23,13 @@ class CreateChallenge(APIView):  # 신규챌린지 생성하기 (관리자만 �
     #permission_classes=[IsStaff]
     def post(self, request, book_id): 
         book = get_object_or_404(Book, pk=book_id)  # 주어진 book_id에 해당하는 Book 객체 가져오기
-        request_data = request.data
+        request_data = request.data.copy()
         request_data['book'] = book.id
 
-        serializer = ChallengeInfoSerializer(data=request.data)
+        serializer = ChallengeInfoSerializer(data=request_data)
         if serializer.is_valid():
             serializer.save()
-            print(serializer.data)
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
