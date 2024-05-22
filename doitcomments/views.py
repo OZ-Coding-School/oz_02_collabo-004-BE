@@ -15,12 +15,12 @@ from doitcomments.serializers import DoItCommentSerializer
 class CreateDIComment(APIView):  # 챌린지 스포일러에 댓글 생성하기 (관리자, 결제유저만 가능)
     #permission_classes = [IsPaidUserOrStaff]
 
-    def post(self, request, user_id, challengeinfo_id, challengespoiler_id):
+    def post(self, request, user_id, challengeinfo_id, challenge_spoiler_id):
         try:
             user = User.objects.get(pk=user_id)
             
             challenge_info = ChallengeInfo.objects.get(pk=challengeinfo_id)
-            challengespoiler = ChallengeSpoiler.objects.get(pk=challengespoiler_id, challenge_info=challenge_info)
+            challenge_spoiler = ChallengeSpoiler.objects.get(pk=challenge_spoiler_id, challenge_info=challenge_info)
 
             user_payments = Payment.objects.filter(user_id=user_id)
             challenge_ids = [payment.challenge_info_id for payment in user_payments]
@@ -35,7 +35,7 @@ class CreateDIComment(APIView):  # 챌린지 스포일러에 댓글 생성하기
             return Response({"error": "ChallengeSpoiler not found"}, status=status.HTTP_404_NOT_FOUND)
 
         data_with_challengespoiler_id = request.data.copy()
-        data_with_challengespoiler_id['challengespoiler_info'] = challengespoiler_id
+        data_with_challengespoiler_id['challenge_spoiler_id'] = challenge_spoiler.id
         data_with_challengespoiler_id['user'] = user.id  
 
         serializer = DoItCommentSerializer(data=data_with_challengespoiler_id)
@@ -49,14 +49,14 @@ class CreateDIComment(APIView):  # 챌린지 스포일러에 댓글 생성하기
 class ChallengeSpoilerComment(APIView): #챌린지 스포일러에 전체 댓글 가져오기 (관리자, 결제유저만 가능)
     #permission_classes = [IsPaidUserOrStaff]
 
-    def get(self, request, challengespoiler_id):
+    def get(self, request, challenge_spoiler_id):
         try:
-            challengespoiler = ChallengeSpoiler.objects.get(pk=challengespoiler_id)
+            challengespoiler = ChallengeSpoiler.objects.get(pk=challenge_spoiler_id)
         except ChallengeSpoiler.DoesNotExist:
             return Response({"error": "ChallengeSpoiler not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # challengespoiler_id에 연결된 DoItComment 댓글들을 가져옵니다.
-        doit_comments = DoItComment.objects.filter(challengespoiler_info=challengespoiler)
+        doit_comments = DoItComment.objects.filter(challenge_spoiler=challengespoiler)
         serializer = DoItCommentSerializer(doit_comments, many=True)
         return Response(serializer.data)
     
