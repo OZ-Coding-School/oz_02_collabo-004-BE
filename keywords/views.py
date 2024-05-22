@@ -11,7 +11,7 @@ class KeywordList(generics.ListAPIView):
     serializer_class = KeywordSerializer
     #permission_classes = [IsStaffOrReadOnly]
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 생성하기
@@ -22,7 +22,7 @@ class CreateKeyword(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
     
 
 
@@ -33,7 +33,7 @@ class KeywordDetail(generics.RetrieveUpdateAPIView):
     #permission_classes = [IsStaffOrReadOnly]
     queryset = Keyword.objects.all()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 책 별 키워드 조회

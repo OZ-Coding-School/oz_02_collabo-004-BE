@@ -12,7 +12,7 @@ class CreateSpoiler(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 수정 및 불러오기
@@ -22,4 +22,4 @@ class SpoilerDetail(generics.RetrieveUpdateAPIView):
     #permission_classes = [IsStaffOrReadOnly]
     queryset = Spoiler.objects.all()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception

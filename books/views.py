@@ -39,7 +39,7 @@ class Books(generics.ListAPIView):
     serializer_class = BookSerializer
     pagination_class = PageNumberPagination
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 전체 도서 리스트 불러오기
@@ -49,7 +49,7 @@ class BookList(generics.ListAPIView):
     pagination_class = PageNumberPagination
     #permission_classes = [IsStaffOrReadOnly]
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 개별 도서 리스트 관리 및 개별 도서 정보 수정하기
@@ -58,7 +58,7 @@ class BookDetail(generics.RetrieveUpdateAPIView):
     serializer_class = BookSerializer
     #permission_classes = [IsStaffOrReadOnly]
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 신규 도서 생성하기
@@ -72,4 +72,4 @@ class BookCreate(generics.CreateAPIView):
         # 새로운 도서가 생성될 때 유저의 권한을 확인
         serializer.save(user=self.request.user)  # 새로운 도서의 작성자로 현재 유저를 지정
 
-        handle_exception = custom_handle_exception
+        #handle_exception = custom_handle_exception
