@@ -7,7 +7,7 @@ class Review(models.Model):
     writer = models.CharField(max_length=255,blank=True)
     title = models.CharField(max_length=255, blank=True)
     content = models.TextField(blank=True)
-    content_type = models.CharField(max_length=255, blank=True)
+    type = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
