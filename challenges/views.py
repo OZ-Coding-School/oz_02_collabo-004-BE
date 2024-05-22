@@ -122,7 +122,7 @@ class UserChallengeDo(APIView):  # 챌린지 참여현황 가져오기 - 몇 % �
                         continue
                     
                     # 해당 일차별 스포일러에 달린 사용자의 댓글 수 계산
-                    comment_days = DoItComment.objects.filter(challengespoiler_info=spoiler, user_id=user_id).count()
+                    comment_days = DoItComment.objects.filter(challenge_spoiler=spoiler, user_id=user_id).count()
                     if comment_days > 0:
                         completed_days += 1
 
@@ -163,7 +163,7 @@ class UserChallengeStatus(APIView):
                 spoiler = challenge_spoilers.filter(day=day_str).first()
             
                 if spoiler:
-                    if user_comments.filter(challengespoiler_info=spoiler).exists():
+                    if user_comments.filter(challenge_spoiler=spoiler).exists():
                         day_completed = True
 
                 days_status[day_str] = day_completed
