@@ -6,8 +6,10 @@ from django.db import models
 
 @receiver([post_save, post_delete], sender=Review)
 def update_book_is_exposed(sender, instance, **kwargs):
-    book = instance.book_id
-    review_count = Review.objects.filter(book_id=book).count()
+
+    book_id = instance.book_id
+    book = Book.objects.get(id=book_id)
+    review_count = Review.objects.filter(book_id=book_id).count()
     
     # 리뷰가 3개고 각 리뷰의 필드가 모두 채워져 있으면 is_exposed를 True로 설정
     review_counts_three = review_count == 3
