@@ -14,7 +14,7 @@ class CreateReview(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 # 수정 및 불러오기
 class ReviewDetail(generics.RetrieveUpdateAPIView):
@@ -23,7 +23,7 @@ class ReviewDetail(generics.RetrieveUpdateAPIView):
     #permission_classes = [IsStaffOrReadOnly]
     queryset = Review.objects.all()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 책 별 추천 서평 조회
@@ -38,4 +38,4 @@ class BookReviews(generics.ListAPIView):
 
         return reviews
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception

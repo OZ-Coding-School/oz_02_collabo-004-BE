@@ -14,7 +14,7 @@ class CreateChallengeSpoiler(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 수정 및 불러오기
@@ -24,7 +24,7 @@ class ChallengeSpoilerDetail(generics.RetrieveUpdateAPIView):
     #permission_classes = [IsStaffOrReadOnly]
     queryset = ChallengeSpoiler.objects.all()
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 
 # 챌린지별 챌린지 스포일러 불러오기
@@ -39,7 +39,7 @@ class ChallengeFiveSpoilers(generics.ListAPIView):
 
         return five_spoilers
 
-    handle_exception = custom_handle_exception
+    #handle_exception = custom_handle_exception
 
 # 책별 챌린지 스포일러 불러오기
 class BookFiveSpoilers(generics.ListAPIView):
